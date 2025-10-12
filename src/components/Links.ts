@@ -6,7 +6,7 @@ export function renderLinks(scrapboxContent: string): string {
   const socialLinksHTML = socialLinks
     .map(
       (social) => `
-      <a href="${social.url}" target="_blank" rel="noopener noreferrer"
+      <a href="${social.url}" target="_blank" rel="noopener noreferrer me"
          class="social-link ${social.bgColor} ${social.hoverColor} text-white px-6 py-3 rounded-full flex items-center gap-2 shadow-lg">
         <iconify-icon icon="${social.icon}" width="20" height="20"></iconify-icon>
         ${social.name}
