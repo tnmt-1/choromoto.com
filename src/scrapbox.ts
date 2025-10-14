@@ -76,11 +76,14 @@ export async function fetchScrapboxPages(): Promise<ProjectResponse | null> {
  */
 async function fetchFromScrapboxAPI(): Promise<ProjectResponse | null> {
   const API_BASE_URL = "https://scrapbox.io/api/pages";
-  const params = new URLSearchParams({
-    sort: "updated",
-    skip: "3",
-    limit: "5",
-  });
+  // APIパラメータを文字列に変換（数値などを含む場合でも対応）
+  const apiParams = Object.fromEntries(
+    Object.entries(siteConfig.scrapbox.api).map(([key, value]) => [
+      key,
+      String(value),
+    ])
+  );
+  const params = new URLSearchParams(apiParams);
   const apiUrl = `${API_BASE_URL}/${siteConfig.scrapbox.projectName}?${params.toString()}`;
 
   console.log("⚠ Fetching Scrapbox data from API (client-side)");

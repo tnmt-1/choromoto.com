@@ -35,6 +35,14 @@ export interface AnalyticsConfig {
 
 export interface ScrapboxConfig {
   projectName: string;
+  api: {
+    /** ソート方法 */
+    sort: "updated" | "created" | "accessed" | "linked" | "views" | "title" | "updatedbyMe";
+    /** 何番目のページから取得するかを指定する */
+    skip: number;
+    /** 取得するページ情報の最大数（範囲：1~1000） */
+    limit: number;
+  };
 }
 
 export interface SiteConfig {
@@ -84,5 +92,10 @@ export const siteConfig: SiteConfig = {
 
   scrapbox: {
     projectName: "chorobook",
+    api: {
+      sort: "updated",
+      skip: 3,
+      limit: 5
+    },
   },
 };

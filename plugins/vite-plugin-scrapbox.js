@@ -11,19 +11,17 @@ const __dirname = dirname(__filename);
  * ブラウザでは実行されません！
  *
  * @param {string} projectName - Scrapboxプロジェクト名
- * @param {Object} options - オプション
+ * @param {Object} apiParams - APIパラメータ（sort, skip, limitなど）
  * @returns {Promise<Object|null>}
  */
-async function fetchScrapboxData(
-  projectName,
-  { sort = "updated", skip = 3, limit = 5 } = {},
-) {
+async function fetchScrapboxData(projectName, apiParams) {
   const API_BASE_URL = "https://scrapbox.io/api/pages";
-  const params = new URLSearchParams({
-    sort,
-    skip: String(skip),
-    limit: String(limit),
-  });
+  // APIパラメータを文字列に変換（数値などを含む場合でも対応）
+  const params = new URLSearchParams(
+    Object.fromEntries(
+      Object.entries(apiParams).map(([key, value]) => [key, String(value)])
+    )
+  );
   const apiUrl = `${API_BASE_URL}/${projectName}?${params.toString()}`;
 
   console.log(`📦 Fetching Scrapbox data from: ${apiUrl}`);
@@ -96,8 +94,8 @@ async function fetchScrapboxData(
     return {
       projectName: projectName,
       pages: [],
-      skip: skip,
-      limit: limit,
+      skip: apiParams.skip || 0,
+      limit: apiParams.limit || 0,
       count: 0,
     };
   }
@@ -124,15 +122,13 @@ export function scrapboxDataPlugin() {
       const configPath = resolve(__dirname, "../site.config.ts");
       const { siteConfig } = await import(configPath);
       const SCRAPBOX_PROJECT = siteConfig.scrapbox.projectName;
+      const API_PARAMS = siteConfig.scrapbox.api;
 
       // ビルド開始時にScrapboxデータを取得
       console.log("\n--- Scrapbox Data Fetching ---");
       console.log(`   Project: ${SCRAPBOX_PROJECT}`);
-      scrapboxData = await fetchScrapboxData(SCRAPBOX_PROJECT, {
-        sort: "updated",
-        skip: 3,
-        limit: 5,
-      });
+      console.log(`   API Params:`, API_PARAMS);
+      scrapboxData = await fetchScrapboxData(SCRAPBOX_PROJECT, API_PARAMS);
       console.log("--- Scrapbox Data Fetching Complete ---\n");
     },
 
