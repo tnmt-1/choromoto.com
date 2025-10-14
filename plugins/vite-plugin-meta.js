@@ -1,57 +1,58 @@
-import { getSeoConfig } from "../src/config/seo";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 /**
  * Vite plugin to inject SEO meta tags at build time
- * @param {Record<string, string>} env - Environment variables
  * @returns {import('vite').Plugin}
  */
-export default function viteMetaPlugin(env = {}) {
+export default function viteMetaPlugin() {
   return {
     name: "vite-plugin-meta",
     transformIndexHtml: {
       order: /** @type {'pre'} */ ("pre"),
-      handler(html) {
-        // 環境変数からSEO設定を取得
-        const config = getSeoConfig(env);
+      async handler(html) {
+        // 設定ファイルから動的にインポート
+        const configPath = resolve(__dirname, "../site.config.ts");
+        const { siteConfig } = await import(configPath);
 
         // Twitterハンドルの整形
-        let twitterHandle = config.twitterHandle;
-        if (twitterHandle && !twitterHandle.startsWith("@")) {
-          twitterHandle = `@${twitterHandle}`;
-        }
+        const twitterHandle = `@${siteConfig.social.twitter.username}`;
 
         // OGP画像のフルURLを生成
-        const ogImageUrl = config.ogImage
-          ? `${config.siteUrl}${config.ogImage}`
-          : `${config.siteUrl}/icon.png`;
+        const ogImageUrl = siteConfig.seo.ogImage
+          ? `${siteConfig.seo.siteUrl}${siteConfig.seo.ogImage}`
+          : `${siteConfig.seo.siteUrl}/icon.png`;
 
         // メタタグを生成
         const metaTags = `
     <!-- Title & Description -->
-    <title>${config.title}</title>
-    <meta name="description" content="${config.description}" />
-    <meta name="keywords" content="${config.keywords.join(",")}" />
-    <meta name="author" content="${config.author}" />
+    <title>${siteConfig.seo.title}</title>
+    <meta name="description" content="${siteConfig.seo.description}" />
+    <meta name="keywords" content="${siteConfig.seo.keywords.join(",")}" />
+    <meta name="author" content="${siteConfig.seo.author}" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="${config.siteUrl}/" />
-    <meta property="og:title" content="${config.title}" />
-    <meta property="og:description" content="${config.description}" />
+    <meta property="og:url" content="${siteConfig.seo.siteUrl}/" />
+    <meta property="og:title" content="${siteConfig.seo.title}" />
+    <meta property="og:description" content="${siteConfig.seo.description}" />
     <meta property="og:image" content="${ogImageUrl}" />
-    <meta property="og:site_name" content="${config.author}" />
+    <meta property="og:site_name" content="${siteConfig.seo.author}" />
     <meta property="og:locale" content="ja_JP" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="${twitterHandle}" />
     <meta name="twitter:creator" content="${twitterHandle}" />
-    <meta name="twitter:title" content="${config.title}" />
-    <meta name="twitter:description" content="${config.description}" />
+    <meta name="twitter:title" content="${siteConfig.seo.title}" />
+    <meta name="twitter:description" content="${siteConfig.seo.description}" />
     <meta name="twitter:image" content="${ogImageUrl}" />
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="${config.siteUrl}/" />
+    <link rel="canonical" href="${siteConfig.seo.siteUrl}/" />
 
     <!-- Robots -->
     <meta name="robots" content="index, follow" />

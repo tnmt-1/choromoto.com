@@ -1,3 +1,5 @@
+import { siteConfig } from "@/site.config";
+
 // Scrapbox API レスポンス型定義
 export interface ScrapboxPage {
   id: string;
@@ -73,17 +75,16 @@ export async function fetchScrapboxPages(): Promise<ProjectResponse | null> {
  * - ビルド時にデータ取得が失敗したとき
  */
 async function fetchFromScrapboxAPI(): Promise<ProjectResponse | null> {
-  const SCRAPBOX_PROJECT = import.meta.env.VITE_SCRAPBOX_PROJECT;
   const API_BASE_URL = "https://scrapbox.io/api/pages";
   const params = new URLSearchParams({
     sort: "updated",
     skip: "3",
     limit: "5",
   });
-  const apiUrl = `${API_BASE_URL}/${SCRAPBOX_PROJECT}?${params.toString()}`;
+  const apiUrl = `${API_BASE_URL}/${siteConfig.scrapbox.projectName}?${params.toString()}`;
 
   console.log("⚠ Fetching Scrapbox data from API (client-side)");
-  console.log(`  Project: ${SCRAPBOX_PROJECT}`);
+  console.log(`  Project: ${siteConfig.scrapbox.projectName}`);
   console.log(`  URL: ${apiUrl}`);
 
   try {

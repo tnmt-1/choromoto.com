@@ -1,15 +1,23 @@
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 /**
  * Vite plugin to inject Google Analytics at build time
- * @param {Record<string, string>} env - Environment variables
  * @returns {import('vite').Plugin}
  */
-export default function viteGoogleAnalyticsPlugin(env = {}) {
+export default function viteGoogleAnalyticsPlugin() {
   return {
     name: "vite-plugin-google-analytics",
     transformIndexHtml: {
       order: /** @type {'pre'} */ ("pre"),
-      handler(html) {
-        const gaId = env.VITE_GA_MEASUREMENT_ID;
+      async handler(html) {
+        // 設定ファイルから動的にインポート
+        const configPath = resolve(__dirname, "../site.config.ts");
+        const { siteConfig } = await import(configPath);
+        const gaId = siteConfig.analytics.measurementId;
 
         // Measurement IDが設定されていない場合はスキップ
         if (!gaId || gaId.trim() === "") {

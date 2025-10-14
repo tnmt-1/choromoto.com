@@ -1,3 +1,9 @@
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 /**
  * Scrapbox APIからデータを取得
  *
@@ -107,14 +113,18 @@ async function fetchScrapboxData(
 // - SSG（Static Site Generation）でデータをHTMLに埋め込む
 // - ユーザーがページを開いたときにはすでにデータが存在している
 // - APIへのリクエストを減らし、表示速度を向上させる
-export function scrapboxDataPlugin(env = {}) {
+export function scrapboxDataPlugin() {
   let scrapboxData = null;
-  const SCRAPBOX_PROJECT = env.VITE_SCRAPBOX_PROJECT;
 
   return {
     name: "vite-plugin-scrapbox-data",
 
     async buildStart() {
+      // 設定ファイルから動的にインポート
+      const configPath = resolve(__dirname, "../site.config.ts");
+      const { siteConfig } = await import(configPath);
+      const SCRAPBOX_PROJECT = siteConfig.scrapbox.projectName;
+
       // ビルド開始時にScrapboxデータを取得
       console.log("\n--- Scrapbox Data Fetching ---");
       console.log(`   Project: ${SCRAPBOX_PROJECT}`);
