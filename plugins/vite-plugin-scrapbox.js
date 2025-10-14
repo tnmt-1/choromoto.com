@@ -119,7 +119,7 @@ export function scrapboxDataPlugin() {
 
     async buildStart() {
       // 設定ファイルから動的にインポート
-      const configPath = resolve(__dirname, "../site.config.ts");
+      const configPath = resolve(__dirname, "../site.config.js");
       const { siteConfig } = await import(configPath);
       const SCRAPBOX_PROJECT = siteConfig.scrapbox.projectName;
       const API_PARAMS = siteConfig.scrapbox.api;

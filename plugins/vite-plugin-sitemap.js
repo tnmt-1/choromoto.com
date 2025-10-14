@@ -15,7 +15,7 @@ export default function viteSitemapPlugin() {
     apply: /** @type {const} */ ("build"), // ビルド時のみ実行
     async closeBundle() {
       // 設定ファイルから動的にインポート
-      const configPath = path.resolve(__dirname, "../site.config.ts");
+      const configPath = path.resolve(__dirname, "../site.config.js");
       const { siteConfig } = await import(configPath);
       const now = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
 

@@ -15,7 +15,7 @@ export default function viteGoogleAnalyticsPlugin() {
       order: /** @type {'pre'} */ ("pre"),
       async handler(html) {
         // 設定ファイルから動的にインポート
-        const configPath = resolve(__dirname, "../site.config.ts");
+        const configPath = resolve(__dirname, "../site.config.js");
         const { siteConfig } = await import(configPath);
         const gaId = siteConfig.analytics.measurementId;
 
