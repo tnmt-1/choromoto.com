@@ -8,11 +8,12 @@ const __dirname = path.dirname(__filename);
 /**
  * Scrapbox API からページ情報を取得
  * @param {string} projectName
+ * @param {number} initialSkip - 取得開始位置
  * @returns {Promise<{count: number, pages: Array<{title: string, updated: number}>}>}
  */
-async function fetchScrapboxPages(projectName) {
+async function fetchScrapboxPages(projectName, initialSkip = 0) {
   const allPages = [];
-  let skip = 0;
+  let skip = initialSkip;
   const limit = 1000; // 最大値を使用
   let totalCount = 0;
 
@@ -33,8 +34,11 @@ async function fetchScrapboxPages(projectName) {
     console.log(`Total Scrapbox pages: ${totalCount}`);
     console.log(`Fetched: ${allPages.length} pages`);
 
+    // 取得すべき残りのページ数を計算（totalCount - initialSkip - 既に取得したページ数）
+    const totalToFetch = totalCount - initialSkip;
+
     // 残りのページを取得
-    while (allPages.length < totalCount) {
+    while (allPages.length < totalToFetch) {
       skip += limit;
 
       // サーバーに負荷をかけないように1秒待機
@@ -50,7 +54,7 @@ async function fetchScrapboxPages(projectName) {
 
       const data = await response.json();
       allPages.push(...data.pages);
-      console.log(`Fetched: ${allPages.length}/${totalCount} pages`);
+      console.log(`Fetched: ${allPages.length}/${totalToFetch} pages`);
     }
 
     return {
@@ -78,6 +82,7 @@ export default function viteScrapboxSitemapPlugin() {
         const { siteConfig } = await import(configPath);
 
         const projectName = siteConfig.scrapbox.projectName;
+        const initialSkip = siteConfig.scrapbox.api.skip || 0;
         const baseUrl = siteConfig.seo.siteUrl.replace(/\/$/, ""); // 末尾のスラッシュを除去
 
         console.log(
@@ -85,7 +90,7 @@ export default function viteScrapboxSitemapPlugin() {
         );
 
         // Scrapbox API からページ情報を取得
-        const { pages } = await fetchScrapboxPages(projectName);
+        const { pages } = await fetchScrapboxPages(projectName, initialSkip);
 
         if (pages.length === 0) {
           console.warn("⚠️  No pages found in Scrapbox project");
@@ -150,13 +155,12 @@ ${urlEntries}
         }
 
         // 新しい _redirects ファイルを生成
-        const redirectsContent =
-          `${existingRedirects.trim()}
+        const redirectsContent = `${`${existingRedirects.trim()}
 
 # Scrapbox redirects - Auto-generated
 ${redirectRules}
 # End Scrapbox redirects
-`.trim() + "\n";
+`.trim()}\n`;
 
         fs.writeFileSync(redirectsPath, redirectsContent);
         console.log(
