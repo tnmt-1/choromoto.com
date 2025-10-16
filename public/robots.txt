@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://chromoto.com/sitemap.xml
+Sitemap: https://choromoto.com/sitemap.xml
+Sitemap: https://choromoto.com/scrapbox/sitemap.xml
