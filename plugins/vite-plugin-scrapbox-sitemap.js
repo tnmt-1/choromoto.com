@@ -101,9 +101,12 @@ export default function viteScrapboxSitemapPlugin() {
         const urlEntries = pages
           .map((page) => {
             const encodedTitle = encodeURIComponent(page.title);
-            const lastmod = new Date(page.updated * 1000)
-              .toISOString()
-              .split("T")[0];
+            // JSTで日付を取得してYYYY-MM-DD形式にフォーマット
+            const date = new Date(page.updated * 1000);
+            const jstDate = new Date(
+              date.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }),
+            );
+            const lastmod = jstDate.toISOString().split("T")[0];
 
             return `  <url>
     <loc>${baseUrl}/scrapbox/${encodedTitle}</loc>

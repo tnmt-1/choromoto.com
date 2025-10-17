@@ -221,12 +221,22 @@ function escapeHtml(text: string): string {
 }
 
 /**
- * タイムスタンプをフォーマット
+ * タイムスタンプをJSTでフォーマット（アクセス時に動的に計算）
  */
 function formatDate(timestamp: number): string {
+  // JSTのタイムゾーンでDateオブジェクトを作成
   const date = new Date(timestamp * 1000);
   const now = new Date();
-  const diffTime = now.getTime() - date.getTime();
+  
+  // JSTでの日付の開始時刻を計算（0時0分0秒）
+  const jstDate = new Date(date.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
+  const jstNow = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Tokyo" }));
+  
+  // 日付の開始時刻（0時0分0秒）を取得
+  const dateStart = new Date(jstDate.getFullYear(), jstDate.getMonth(), jstDate.getDate());
+  const nowStart = new Date(jstNow.getFullYear(), jstNow.getMonth(), jstNow.getDate());
+  
+  const diffTime = nowStart.getTime() - dateStart.getTime();
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
   if (diffDays === 0) {
@@ -240,6 +250,6 @@ function formatDate(timestamp: number): string {
   } else if (diffDays < 365) {
     return `${Math.floor(diffDays / 30)}ヶ月前`;
   } else {
-    return date.toLocaleDateString("ja-JP");
+    return jstDate.toLocaleDateString("ja-JP", { timeZone: "Asia/Tokyo" });
   }
 }
