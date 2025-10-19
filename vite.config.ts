@@ -1,11 +1,7 @@
 import { fileURLToPath } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
+import vike from "vike/plugin";
 import { defineConfig } from "vite";
-import viteGoogleAnalyticsPlugin from "./plugins/vite-plugin-google-analytics.js";
-import viteMetaPlugin from "./plugins/vite-plugin-meta.js";
-import { scrapboxDataPlugin } from "./plugins/vite-plugin-scrapbox.js";
-import viteScrapboxSitemapPlugin from "./plugins/vite-plugin-scrapbox-sitemap.js";
-import viteSitemapPlugin from "./plugins/vite-plugin-sitemap.js";
 
 export default defineConfig(() => {
   return {
@@ -15,12 +11,8 @@ export default defineConfig(() => {
       },
     },
     plugins: [
+      vike({ prerender: true }),
       tailwindcss(),
-      scrapboxDataPlugin(),
-      viteMetaPlugin(),
-      viteGoogleAnalyticsPlugin(),
-      viteSitemapPlugin(),
-      viteScrapboxSitemapPlugin(),
     ],
   };
 });

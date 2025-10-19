@@ -10,10 +10,13 @@
   },
   "devDependencies": {
     "@types/node": "^24.7.2",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "typescript": "~5.9.3",
-    "vite": "^7.1.7",
-    "vite-plugin-html": "^3.2.2",
-    "vite-plugin-prerender": "^1.0.8"
+    "vike": "^0.4.242",
+    "vite": "^7.1.7"
   },
   "dependencies": {
     "@biomejs/biome": "^2.2.5",

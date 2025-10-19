@@ -57,7 +57,7 @@ export const siteConfig = {
     description: "choromotoのポートフォリオサイト",
     author: "choromoto",
     siteUrl: "https://choromoto.com/",
-    ogImage: "/favicon.ico",
+    ogImage: "favicon.ico",
     keywords: ["portfolio", "web development", "programming"],
   },
 
@@ -91,7 +91,7 @@ export const siteConfig = {
     api: {
       sort: "updated",
       skip: 3,
-      limit: 5
+      limit: 5,
     },
   },
 };
