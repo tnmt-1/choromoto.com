@@ -1,4 +1,4 @@
-import { siteConfig } from "../../site.config";
+import { siteConfig } from "@/site.config";
 
 // ヘッダーコンポーネント
 export function Header() {

@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { siteConfig } from "../site.config";
+import { siteConfig } from "@/site.config";
 
 /**
  * Scrapbox APIからページ情報を取得
