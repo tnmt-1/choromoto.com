@@ -53,12 +53,12 @@
 /** @type {SiteConfig} */
 export const siteConfig = {
   seo: {
-    title: "choromoto.com",
-    description: "choromotoのポートフォリオサイト",
-    author: "choromoto",
-    siteUrl: "https://choromoto.com/",
-    ogImage: "favicon.ico",
-    keywords: ["portfolio", "web development", "programming"],
+     title: "choromoto.com",
+     description: "choromotoのポートフォリオサイト",
+     author: "choromoto",
+     siteUrl: "https://choromoto.com",
+     ogImage: "favicon.ico",
+     keywords: ["portfolio", "web development", "programming"],
   },
 
   social: {
