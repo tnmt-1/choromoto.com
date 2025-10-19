@@ -42,9 +42,9 @@ export interface ProjectResponse {
 }
 
 /**
- * Scrapbox APIからデータを取得（SSGビルド時に+data.tsから呼ばれる）
+ * Scrapbox APIからデータを取得
  */
-export async function fetchFromScrapboxAPI(): Promise<ProjectResponse | null> {
+async function fetchFromScrapboxAPI(): Promise<ProjectResponse | null> {
   const API_BASE_URL = "https://scrapbox.io/api/pages";
   // APIパラメータを文字列に変換（数値などを含む場合でも対応）
   const apiParams = Object.fromEntries(
