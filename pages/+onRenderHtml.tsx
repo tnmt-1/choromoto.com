@@ -1,10 +1,10 @@
 import ReactDOMServer from "react-dom/server";
 import { dangerouslySkipEscape, escapeInject } from "vike/server";
-import type { OnRenderHtmlAsync } from "vike/types";
+
 import { siteConfig } from "@/site.config";
 import type { Data } from "./+data";
 import Page from "./+Page";
-import "../src/style.css";
+import "@/src/style.css";
 
 // Google Analyticsコンポーネント
 function GoogleAnalytics({ measurementId }: { measurementId: string }) {
@@ -69,9 +69,10 @@ function HtmlDocument({ children }: { children: React.ReactNode }) {
   );
 }
 
-const onRenderHtml: OnRenderHtmlAsync = async (
-  pageContext,
-): ReturnType<OnRenderHtmlAsync> => {
+const onRenderHtml = async (
+  pageContext: { data: Data }
+// biome-ignore lint/suspicious/noExplicitAny: <戻り値型は Promise<any> で暫定対応（Vike公式型が提供されていないため）>
+): Promise<any> => {
   const { data } = pageContext as { data: Data };
 
   // ReactコンポーネントをHTMLに変換（サーバー側のみ）
